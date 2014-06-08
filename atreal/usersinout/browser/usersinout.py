@@ -127,6 +127,7 @@ class UsersInOut (BrowserView):
         self.pms = getToolByName(self.context,'portal_membership')
         pg = getToolByName(self.context,'portal_groups')
         acl = getToolByName(self.context,'acl_users')
+        self.pw_hashes = acl.source_users._user_passwords
         gids = set([item['id'] for item in acl.searchGroups()])
         self.group_roles = {}
         for gid in gids:
@@ -148,7 +149,8 @@ class UsersInOut (BrowserView):
         for gid in groups:
             group_roles.extend(self.group_roles.get(gid, []))
         roles = [role for role in member.getRoles() if not role in group_roles]
-        props = [userId, '', ','.join(roles)] # userid, password, roles
+        pw = self.pw_hashes.get(member.id, '')
+        props = [userId, pw, ','.join(roles)] # userid, password, roles
         if member is not None:
             for p in MEMBER_PROPERTIES:
                 props.append(member.getProperty(p))
