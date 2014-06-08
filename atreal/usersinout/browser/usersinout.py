@@ -108,7 +108,7 @@ class UsersInOut (BrowserView):
         for line in validLines:
             datas = dict(zip(header, line))
             username = datas['username']
-            pw_import = datas.['password']
+            pw_import = datas['password']
             pw_hash = pw_hashes.get(username, '')
             if not pw_hash:
                 print 'Could not find user %s' % username
