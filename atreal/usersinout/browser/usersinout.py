@@ -90,7 +90,7 @@ class UsersInOut (BrowserView):
                 username = datas['username']
                 password = datas.pop('password')
                 roles = datas.pop('roles').split(',')
-                pr.addMember(username, password, roles, [], datas)
+                pr.addMember(username, 'password', roles, [], datas)
                 for group in groups:
                     if not group in groupsDict.keys():
                         groupsDict[group] = acl.getGroupById(group)
@@ -99,6 +99,24 @@ class UsersInOut (BrowserView):
             except:
                 invalidLines.append(line)
                 print "Invalid line: %s" % line
+
+        # Populate the passwords
+        print 'Importing passwords:'
+        acl = getToolByName(self, 'acl_users')
+        pw_hashes = acl.source_users._user_passwords
+        changes = []
+        for line in validLines:
+            datas = dict(zip(header, line))
+            username = datas['username']
+            pw_import = datas.['password']
+            pw_hash = pw_hashes.get(username, '')
+            if not pw_hash:
+                print 'Could not find user %s' % username
+                continue
+            if pw_import != pw_hash:
+                print 'changed', username, pw_hash, pw_import
+                changes.append((username, pw_import))
+        pw_hashes.update(changes)
 
         if invalidLines:
             datafile = self._createCSV(invalidLines)
