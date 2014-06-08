@@ -1,5 +1,14 @@
 .. contents::
 
+Note
+====
+
+Changes made from the standard usersinout: I enable export and import of hashed passwords, useful for site migrations. At the moment this is used to export from 3.5 and import to 4.1.
+
+Import/export of hashes is based on documentation here:
+
+http://docs.plone.org/develop/plone/members/member_basics.html#exporting-and-importing-member-passwords
+
 Overview
 ========
 
